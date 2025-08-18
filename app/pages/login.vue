@@ -17,7 +17,7 @@ const formSubmit = async () => {
     const response =  await $api.data.login(formData)
     authCookie.value = response.auth_token
     authToken.value = response.auth_token
-    //window.location.reload()
+    window.location.reload()
 
   }catch(error){
     console.log(error)
