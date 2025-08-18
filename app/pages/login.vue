@@ -6,8 +6,8 @@ const authCookie = useCookie('auth_token',{
   maxAge: 60 * 60 * 24 * 7, // 7 дней
 })
 const formData = reactive({
-  email:'d@skib.org',
-  password:'123'
+  email:'',
+  password:''
 })
 const loading = ref(false)
 
@@ -17,7 +17,7 @@ const formSubmit = async () => {
     const response =  await $api.data.login(formData)
     authCookie.value = response.auth_token
     authToken.value = response.auth_token
-    window.location.reload()
+    //window.location.reload()
 
   }catch(error){
     console.log(error)
