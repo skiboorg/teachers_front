@@ -5,6 +5,11 @@ export function createBlankRepository(appFetch: typeof $fetch){
     const authCookie = useCookie('auth_token')
 
     return{
+        async logout(){
+            authCookie.value = null
+            await appFetch('/auth/token/logout/',{method:'post'})
+            window.location.href='/'
+        },
         async login (payload){
             try{
                 const response = await appFetch('/auth/token/login',{

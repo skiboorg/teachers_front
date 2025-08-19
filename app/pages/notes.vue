@@ -3,6 +3,10 @@ const {$api} =  useNuxtApp()
 const {user} = useAuthStore()
 
 const text =ref('')
+const text1 =ref('')
+const text2 =ref('')
+const text3 =ref('')
+
 const status_id =ref(null)
 
 const create_note = ref(false)
@@ -11,7 +15,14 @@ const {data:statuses} = await useAsyncData(()=> $api.data.statuses())
 
 const noteAction = async (action,id:null,body:null) => {
 
-  const res = await $api.data.note_action(action,id,body || {text: text.value,status_id:status_id.value})
+  const res = await $api.data.note_action(action,id,body || {
+    text: text.value,
+    text1: text1.value,
+    text2: text2.value,
+    text3: text3.value,
+    status_id:status_id.value
+  })
+
   await refresh()
   create_note.value = false
 }
@@ -21,7 +32,7 @@ const noteAction = async (action,id:null,body:null) => {
   <div class="container">
     <div class="grid grid-cols-3 mb-4 pt-4">
     <div class="flex gap-4 items-center">
-      <NuxtLink to="/">Расписание</NuxtLink>
+      <NuxtLink to="/"><Button label="Расписание"/> </NuxtLink>
 
       <Button @click="create_note = !create_note" label="Добавить заметку"/>
     </div>
@@ -37,11 +48,16 @@ const noteAction = async (action,id:null,body:null) => {
           </div>
         </template>
       </Select>
-      <p class="mb-1">Текст</p>
+      <p class="mb-1">ФИО клента ребенка</p>
       <Textarea v-model="text" fluid/>
+      <p class="mb-1">Возраст и уровень ученика</p>
+      <Textarea v-model="text1" fluid/>
+      <p class="mb-1">Коментарий к заявке</p>
+      <Textarea v-model="text2" fluid/>
+      <p class="mb-1">Дата последнего контакта</p>
+      <Textarea v-model="text3" fluid/>
       <Button @click="noteAction('post')" label="Создать"/>
     </div>
-
     <DataTable :value="data" >
       <Column field="id" header="id"></Column>
       <Column  header="Статус">
@@ -71,9 +87,24 @@ const noteAction = async (action,id:null,body:null) => {
 
         </template>
       </Column>
-      <Column  header="Текст">
+      <Column  header="ФИО клента ребенка">
         <template #body="slotProps">
           <pre>{{slotProps.data.text}}</pre>
+        </template>
+      </Column>
+      <Column  header="Возраст и уровень ученика">
+        <template #body="slotProps">
+          <pre>{{slotProps.data.text1}}</pre>
+        </template>
+      </Column>
+      <Column  header="Коментарий к заявке">
+        <template #body="slotProps">
+          <pre>{{slotProps.data.text2}}</pre>
+        </template>
+      </Column>
+      <Column  header="Дата последнего контакта">
+        <template #body="slotProps">
+          <pre>{{slotProps.data.text3}}</pre>
         </template>
       </Column>
       <Column class="w-24 !text-end">

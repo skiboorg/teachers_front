@@ -70,21 +70,25 @@ const dateSelected =()=> {
   console.log(lessons.value)
 }
 
+const handleUpdate = async () => {
+  await onTeacherChange()
+}
+
 
 </script>
 <template>
   <div class="container">
-    <div class="grid grid-cols-3 mb-4 pt-4">
+    <div class="flex justify-between items-center mb-4 pt-4">
       <div v-if="user.is_staff" class="flex gap-4">
-        <NuxtLink to="/notes">Заметки</NuxtLink>
+        <NuxtLink to="/notes"><Button label="Заметки"/></NuxtLink>
       </div>
 
       <div class="flex gap-4 items-center">
         <img class="w-[70px] h-[70px] object-cover rounded-full" :src="user.avatar" alt="">
         <p>{{user.full_name}}</p>
+        <Button @click="$api.data.logout()" label="Выйти"/>
       </div>
     </div>
-
     <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
       <!-- Teacher Select -->
       <div v-if="user.is_staff" class="col-span-1">
@@ -126,7 +130,7 @@ const dateSelected =()=> {
 
         <div class="flex items-center justify-between mb-4">
           <p class="font-semibold ">Список уроков</p>
-          <BlockAddLesson :user="selectedTeacher" :date="selectedDate" />
+          <BlockAddLesson @need-update="handleUpdate" :user="selectedTeacher" :date="selectedDate" />
         </div>
 
 
@@ -135,7 +139,7 @@ const dateSelected =()=> {
           <!--        <div :class="['h-2 rounded mb-2', getStatusColor(lesson.status.tag_color)]"></div>-->
           <div class="flex items-center justify-between">
             <div class="font-medium">{{ lesson.lesson_type.name }}</div>
-            <BlockAddLesson :user="selectedTeacher" :lesson="lesson"/>
+            <BlockAddLesson @need-update="handleUpdate" :user="selectedTeacher" :lesson="lesson"/>
           </div>
 
           <div class="flex gap-2 mb-2">
@@ -144,22 +148,22 @@ const dateSelected =()=> {
           <div class="flex gap-2 mb-2">
             <p>Статус урока:</p><Badge :severity="lesson.status?.tag_color" >{{lesson.status?.name}}</Badge>
           </div>
-          <div class="flex gap-2 mb-4">
-            <p>Статус оплаты:</p><Badge :severity="lesson.payment_status?.tag_color" >{{lesson.payment_status?.name}}</Badge>
+          <div v-if="user.is_staff" class="flex gap-2 mb-4">
+            <p>Статус оплаты:</p><Badge :severity="lesson.payment_status?.tag_color || 'secondary'" >{{lesson.payment_status?.name || 'Не указан'}}</Badge>
           </div>
-
-
 
 
           <div class="mb-2">
             <p>Время урока:</p>
             <p class="text-gray-600 text-sm">{{ lesson.start_time }} – {{ lesson.end_time }}</p>
-
           </div>
-          <div class="">
+          <div class="mb-2">
             <p>Коментарий:</p>
             <p class="text-gray-600 text-sm">{{ lesson.comment }}</p>
-
+          </div>
+          <div class="">
+            <p>Ученики:</p>
+            <p class="text-gray-600 text-sm">{{ lesson.pupils_text }}</p>
           </div>
         </div>
       </div>

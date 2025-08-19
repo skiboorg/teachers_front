@@ -2,10 +2,14 @@
 const {$api} =  useNuxtApp()
 
 const props = defineProps(['user','date','lesson'])
+const emits = defineEmits(['need-update'])
 const visible =ref(false);
+const loading =ref(false);
+const {user} = useAuthStore()
 
 const lesson_data = ref({
   comment:null,
+  pupils_text:null,
   teacher_id:null,
   lesson_type_id:null,
   status_id:null,
@@ -38,9 +42,10 @@ watch(() => props.lesson, (newData) => {
   if (!newData) return
   lesson_data.value = {
     comment:newData.comment,
+    pupils_text:newData.pupils_text,
     lesson_type_id:newData.lesson_type.id,
     status_id:newData.status.id,
-    payment_status_id:newData.payment_status.id,
+    payment_status_id:newData.payment_status?.id || null,
     date:newData.date,
     start_time:newData.start_time,
     end_time:newData.end_time,
@@ -48,13 +53,17 @@ watch(() => props.lesson, (newData) => {
 }, { immediate: true })
 
 const handleClick = async (action) => {
+  loading.value = true
     const result = await $api.data.lesson_action(action,props.lesson?.id | null,lesson_data.value)
+    visible.value = false
+  loading.value = false
+    emits('need-update')
 }
 </script>
 
 <template>
 <!--  {{lesson_data}}-->
-  <Button size="small" v-if="!lesson" @click="visible=true" :disabled="!props.date || !props.user" icon="pi pi-plus"/>
+  <Button size="small" v-if="!lesson" @click="visible=true" :disabled="!props.date || !props.user" label="Добавить урок" outlined severity="secondary"/>
   <Button v-else size="small" @click="visible=true" icon="pi pi-pencil" />
   <Dialog v-model:visible="visible" modal header="Новый урок" >
     <p class="mb-1">Тип урока</p>
@@ -74,24 +83,26 @@ const handleClick = async (action) => {
       </template>
     </Select>
 
-    <p class="mb-1">Статус оплаты</p>
-    <Select class="mb-3" fluid v-model="lesson_data.payment_status_id" :options="statuses.payment_statuses" option-label="name" option-value="id">
+    <p v-if="user.is_staff" class="mb-1">Статус оплаты</p>
+    <Select v-if="user.is_staff" class="mb-3" fluid v-model="lesson_data.payment_status_id" :options="statuses.payment_statuses" option-label="name" option-value="id">
       <template #option="slotProps">
         <div class="flex items-center">
           <div><Badge :value="slotProps.option.name" :severity="slotProps.option.tag_color"></Badge></div>
         </div>
       </template>
     </Select>
+    <p class="mb-1">Ученики</p>
+    <InputText  class="mb-3" fluid v-model="lesson_data.pupils_text"/>
     <p class="mb-1">Коментарий</p>
     <InputText  class="mb-3" fluid v-model="lesson_data.comment"/>
     <p class="mb-1">Начало</p>
-    <InputMask mask="99:99"  class="mb-3" fluid v-model="lesson_data.start_time"/>
+    <InputMask mask="99:99" placeholder="__:__" class="mb-3" fluid v-model="lesson_data.start_time"/>
     <p class="mb-1">Конец</p>
-    <InputMask mask="99:99"  class="mb-3" fluid v-model="lesson_data.end_time"/>
-    <Button v-if="!lesson" @click="handleClick('add')" label="СОздать"/>
-    <div v-else class="">
-      <Button  @click="handleClick('edit')" label="Редактировать"/>
-      <Button  @click="handleClick('delete')" label="Удалить"/>
+    <InputMask mask="99:99" placeholder="__:__" class="mb-3" fluid v-model="lesson_data.end_time"/>
+    <Button :loading="loading" v-if="!lesson" @click="handleClick('add')" label="Создать"/>
+    <div v-else class="flex gap-2">
+      <Button :loading="loading" @click="handleClick('edit')" label="Редактировать"/>
+      <Button :loading="loading" @click="handleClick('delete')" label="Удалить"/>
     </div>
 
   </Dialog>
