@@ -9,6 +9,7 @@ const {user} = useAuthStore()
 
 const lesson_data = ref({
   comment:null,
+  comment_hidden:null,
   pupils_text:null,
   pupils:null,
   teacher_id:null,
@@ -44,6 +45,7 @@ watch(() => props.lesson, (newData) => {
   if (!newData) return
   lesson_data.value = {
     comment:newData.comment,
+    comment_hidden:newData.comment_hidden,
     pupils_text:newData.pupils_text,
     pupils:newData.pupils,
     lesson_type_id:newData.lesson_type.id,
@@ -96,9 +98,11 @@ const handleClick = async (action) => {
     </Select>
 
     <p class="mb-1">Ученики</p>
-    <MultiSelect fluid v-model="lesson_data.pupils" :options="pupils" optionLabel="full_name" option-value="id" filter placeholder="Выберите"/>
-    <p v-if="user.is_staff" class="mb-1">Коментарий</p>
-    <InputText v-if="user.is_staff"  class="mb-3" fluid v-model="lesson_data.comment"/>
+    <MultiSelect fluid v-model="lesson_data.pupils" class="mb-3" :options="pupils" optionLabel="full_name" option-value="id" filter placeholder="Выберите"/>
+    <p  class="mb-1">Коментарий</p>
+    <InputText  class="mb-3" fluid v-model="lesson_data.comment"/>
+    <p v-if="user.is_staff" class="mb-1">Коментарий админа</p>
+    <InputText v-if="user.is_staff"  class="mb-3" fluid v-model="lesson_data.comment_hidden"/>
     <p class="mb-1">Начало</p>
     <InputMask mask="99:99" placeholder="__:__" class="mb-3" fluid v-model="lesson_data.start_time"/>
     <p class="mb-1">Конец</p>
