@@ -98,6 +98,10 @@ export function createBlankRepository(appFetch: typeof $fetch){
 
             return resp
         },
+        async pupils(){
+            const response =  await appFetch(`/api/user/pupils`)
+            return response
+        },
 
     }
 

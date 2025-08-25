@@ -10,6 +10,7 @@ const {user} = useAuthStore()
 const lesson_data = ref({
   comment:null,
   pupils_text:null,
+  pupils:null,
   teacher_id:null,
   lesson_type_id:null,
   status_id:null,
@@ -20,6 +21,7 @@ const lesson_data = ref({
 })
 
 const {data:statuses} = await useAsyncData(()=> $api.data.statuses())
+const {data:pupils} = await useAsyncData(()=> $api.data.pupils())
 
 function formatToYMD(date) {
   const d = new Date(date)
@@ -43,6 +45,7 @@ watch(() => props.lesson, (newData) => {
   lesson_data.value = {
     comment:newData.comment,
     pupils_text:newData.pupils_text,
+    pupils:newData.pupils,
     lesson_type_id:newData.lesson_type.id,
     status_id:newData.status.id,
     payment_status_id:newData.payment_status?.id || null,
@@ -62,8 +65,8 @@ const handleClick = async (action) => {
 </script>
 
 <template>
-<!--  {{lesson_data}}-->
-  <Button size="small" v-if="!lesson" @click="visible=true" :disabled="!props.date || !props.user" label="Добавить урок" outlined severity="secondary"/>
+
+  <Button size="small" v-if="!lesson" @click="visible=true" :disabled="!props.date || !props.user" label="Добавить урок"  />
   <Button v-else size="small" @click="visible=true" icon="pi pi-pencil" />
   <Dialog v-model:visible="visible" modal header="Новый урок" >
     <p class="mb-1">Тип урока</p>
@@ -91,10 +94,11 @@ const handleClick = async (action) => {
         </div>
       </template>
     </Select>
+
     <p class="mb-1">Ученики</p>
-    <InputText  class="mb-3" fluid v-model="lesson_data.pupils_text"/>
-    <p class="mb-1">Коментарий</p>
-    <InputText  class="mb-3" fluid v-model="lesson_data.comment"/>
+    <MultiSelect fluid v-model="lesson_data.pupils" :options="pupils" optionLabel="full_name" option-value="id" filter placeholder="Выберите"/>
+    <p v-if="user.is_staff" class="mb-1">Коментарий</p>
+    <InputText v-if="user.is_staff"  class="mb-3" fluid v-model="lesson_data.comment"/>
     <p class="mb-1">Начало</p>
     <InputMask mask="99:99" placeholder="__:__" class="mb-3" fluid v-model="lesson_data.start_time"/>
     <p class="mb-1">Конец</p>
