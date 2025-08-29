@@ -98,7 +98,8 @@ const handleClick = async (action) => {
     </Select>
 
     <p class="mb-1">Ученики</p>
-    <MultiSelect fluid v-model="lesson_data.pupils" class="mb-3" :options="pupils" optionLabel="full_name" option-value="id" filter placeholder="Выберите"/>
+<!--    <MultiSelect fluid v-model="lesson_data.pupils" class="mb-3" :options="pupils" optionLabel="full_name" option-value="id" filter placeholder="Выберите"/>-->
+    <InputText  class="mb-3" fluid v-model="lesson_data.pupils_text"/>
     <p  class="mb-1">Коментарий</p>
     <InputText  class="mb-3" fluid v-model="lesson_data.comment"/>
     <p v-if="user.is_staff" class="mb-1">Коментарий админа</p>

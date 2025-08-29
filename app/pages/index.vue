@@ -89,7 +89,7 @@ const handleUpdate = async () => {
         <Button @click="$api.data.logout()" label="Выйти"/>
       </div>
     </div>
-    <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <!-- Teacher Select -->
       <div v-if="user.is_staff" class="col-span-1">
         <p class="font-semibold mb-2">Выберите преподавателя</p>
@@ -160,6 +160,10 @@ const handleUpdate = async () => {
           <div class="mb-2">
             <p>Коментарий:</p>
             <p class="text-gray-600 text-sm">{{ lesson.comment }}</p>
+          </div>
+          <div v-if="user.is_staff" class="mb-2">
+            <p>Коментарий админа:</p>
+            <p class="text-gray-600 text-sm">{{ lesson.comment_hidden }}</p>
           </div>
           <div class="">
             <p>Ученики:</p>

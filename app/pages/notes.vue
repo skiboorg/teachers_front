@@ -30,12 +30,12 @@ const noteAction = async (action,id:null,body:null) => {
 
 <template>
   <div class="container">
-    <div class="grid grid-cols-3 mb-4 pt-4">
+
     <div class="flex gap-4 items-center">
       <NuxtLink to="/"><Button label="Расписание"/> </NuxtLink>
 
       <Button @click="create_note = !create_note" label="Добавить заметку"/>
-    </div>
+
   </div>
     <div v-if="create_note" class="">
 
