@@ -103,6 +103,163 @@ export function createBlankRepository(appFetch: typeof $fetch){
             return response
         },
 
+        async getAllTask() {
+            return await appFetch('/api/idea/tasks/')
+        },
+        async addTask(data) {
+            const formData = new FormData()
+
+            // Основные поля задачи
+            formData.append('title', data.title || '')
+            formData.append('description', data.description || '')
+            formData.append('created_at_text', data.created_at_text || '')
+            formData.append('deadline_text', data.deadline_text || '')
+
+            // Булевы поля
+            formData.append('is_completed', data.is_completed ? 'true' : 'false')
+            formData.append('has_question', data.has_question ? 'true' : 'false')
+            formData.append('is_urgent', data.is_urgent ? 'true' : 'false')
+            formData.append('is_planned', data.is_planned ? 'true' : 'false')
+            formData.append('is_think', data.is_think ? 'true' : 'false')
+            formData.append('is_hidden', data.is_hidden ? 'true' : 'false')
+
+            // Прикрепления и файлы
+            formData.append('attachments', JSON.stringify(data.attachments || []))
+            data.attachments?.forEach((att: any, index: number) => {
+                if (att.file) formData.append(`file_${index}`, att.file)
+            })
+
+            const notesToSend = data.notes
+                ?.filter((note: any) => note.text && note.text.trim() !== '') || []
+            formData.append('notes', JSON.stringify(notesToSend))
+            return await appFetch('/api/idea/tasks/', { method: 'POST', body: formData })
+
+        },
+        async updateTask(id: number, data: any) {
+            console.log(data)
+            const formData = new FormData()
+
+            // Основные поля задачи
+            formData.append('title', data.title || '')
+            formData.append('description', data.description || '')
+            formData.append('created_at_text', data.created_at_text || '')
+            formData.append('deadline_text', data.deadline_text || '')
+
+            // Булевы поля
+            formData.append('is_completed', data.is_completed ? 'true' : 'false')
+            formData.append('has_question', data.has_question ? 'true' : 'false')
+            formData.append('is_urgent', data.is_urgent ? 'true' : 'false')
+            formData.append('is_planned', data.is_planned ? 'true' : 'false')
+            formData.append('is_think', data.is_think ? 'true' : 'false')
+            formData.append('is_hidden', data.is_hidden ? 'true' : 'false')
+
+            // Прикрепления и файлы
+            formData.append('attachments', JSON.stringify(data.attachments || []))
+            data.attachments?.forEach((att: any, index: number) => {
+                if (att.file) formData.append(`file_${index}`, att.file)
+            })
+
+            const notesToSend = data.notes
+                ?.filter((note: any) => note.text && note.text.trim() !== '') || []
+            formData.append('notes', JSON.stringify(notesToSend))
+
+            return await appFetch(`/api/idea/tasks/${id}/`, {
+                method: 'PUT',
+                body: formData,
+            })
+        },
+        async deleteTask(id: number) {
+            return await appFetch(`/api/idea/tasks/${id}/`, { method: 'DELETE' })
+        },
+        async getReels() {
+            return await appFetch('/api/idea/reels-ideas/')
+        },
+        async createReels(data: any) {
+            const formData = new FormData()
+            formData.append('reels_number', data.reels_number)
+            formData.append('title', data.title)
+            formData.append('plot_description', data.plot_description)
+            formData.append('is_approved', data.is_approved ? 'true' : 'false')
+            formData.append('admin_comment', data.admin_comment || '')
+            formData.append('example_links', JSON.stringify(data.example_links || []))
+
+            return await appFetch('/api/idea/reels-ideas/', { method: 'POST', body: formData })
+        },
+
+        async updateReels(id: number, data: any) {
+            const formData = new FormData()
+            formData.append('reels_number', data.reels_number)
+            formData.append('title', data.title)
+            formData.append('plot_description', data.plot_description)
+            formData.append('is_approved', data.is_approved ? 'true' : 'false')
+            formData.append('admin_comment', data.admin_comment || '')
+            formData.append('example_links', JSON.stringify(data.example_links || []))
+
+            return await appFetch(`/api/idea/reels-ideas/${id}/`, { method: 'PUT', body: formData })
+        },
+
+        async deleteReels(id: number) {
+            return await appFetch(`/api/idea/reels-ideas/${id}/`, { method: 'DELETE' })
+        },
+
+
+        async getMasterclasses() {
+            return await appFetch('/api/idea/masterclass-ideas/')
+        },
+
+        async createMC(data: any) {
+            const formData = new FormData()
+            formData.append('mk_number', data.mk_number)
+            formData.append('title', data.title)
+            formData.append('description', data.description)
+            formData.append('is_approved', data.is_approved ? 'true' : 'false')
+            formData.append('admin_comment', data.admin_comment || '')
+            if (data.cover) formData.append('cover', data.cover)
+
+            formData.append('materials', JSON.stringify(data.materials || []))
+            formData.append('example_links', JSON.stringify(data.example_links || []))
+            formData.append('dates', JSON.stringify(data.dates || []))
+            data.files?.forEach((f: any, i: number) => {
+                if (f.file) formData.append(`files[${i}][file]`, f.file)
+                formData.append(`files[${i}][name]`, f.name)
+            })
+
+            return await appFetch('/api/idea/masterclass-ideas/', {
+                method: 'POST',
+                body: formData,
+            })
+        },
+
+        async updateMC(id: number, data: any) {
+            const formData = new FormData()
+            formData.append('mk_number', data.mk_number)
+            formData.append('title', data.title)
+            formData.append('description', data.description)
+            formData.append('is_approved', data.is_approved ? 'true' : 'false')
+            formData.append('admin_comment', data.admin_comment || '')
+            if (data.cover instanceof File) formData.append('cover', data.cover)
+
+            formData.append('materials', JSON.stringify(data.materials || []))
+            formData.append('example_links', JSON.stringify(data.example_links || []))
+            formData.append('dates', JSON.stringify(data.dates || []))
+            data.files?.forEach((f: any, i: number) => {
+                if (f.file) formData.append(`files[${i}][file]`, f.file)
+                formData.append(`files[${i}][name]`, f.name)
+            })
+
+            return await appFetch(`/api/idea/masterclass-ideas/${id}/`, {
+                method: 'PUT',
+                body: formData,
+            })
+        },
+
+        async deleteMC(id: number) {
+            return await appFetch(`/api/idea/masterclass-ideas/${id}/`, { method: 'DELETE' })
+        },
+
+
+
+
     }
 
 

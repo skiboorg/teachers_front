@@ -1,4 +1,8 @@
 <script setup lang="ts">
+definePageMeta({
+  layout: 'login'
+})
+
 const {$api} = useNuxtApp()
 const { authToken } = useAuthToken()
 

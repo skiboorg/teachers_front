@@ -78,17 +78,7 @@ const handleUpdate = async () => {
 </script>
 <template>
   <div class="container">
-    <div class="flex justify-between items-center mb-4 pt-4">
-      <div v-if="user.is_staff" class="flex gap-4">
-        <NuxtLink to="/notes"><Button label="Заметки"/></NuxtLink>
-      </div>
 
-      <div class="flex gap-4 items-center">
-        <img class="w-[70px] h-[70px] object-cover rounded-full" :src="user.avatar" alt="">
-        <p>{{user.full_name}}</p>
-        <Button @click="$api.data.logout()" label="Выйти"/>
-      </div>
-    </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
       <!-- Teacher Select -->
       <div v-if="user.is_staff" class="col-span-1">
