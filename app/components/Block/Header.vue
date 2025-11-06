@@ -3,7 +3,7 @@ const {user} = useAuthStore()
 const links = [
   {name: 'Расписание', to: '/', is_admin: false, is_support:false},
   {name: 'Заметки', to: '/notes', is_admin: true, is_support:false},
-  {name: 'Задачи', to: '/task', is_admin: true, is_support:true},
+  {name: 'Задачи', to: '/task', is_admin: true, is_support:false},
   {name: 'Идеи для reels', to: '/reels_idea', is_admin: true, is_support:true},
   {name: 'Идеи для МК', to: '/mk_idea', is_admin: true, is_support:true},
 ]

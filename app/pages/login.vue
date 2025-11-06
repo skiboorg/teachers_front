@@ -2,7 +2,8 @@
 definePageMeta({
   layout: 'login'
 })
-
+import { useToast } from 'primevue/usetoast';
+const toast = useToast()
 const {$api} = useNuxtApp()
 const { authToken } = useAuthToken()
 
@@ -25,6 +26,7 @@ const formSubmit = async () => {
 
   }catch(error){
     console.log(error)
+    toast.add({ severity: 'error',summary:'Ошибка', detail: 'Логин или пароль не верный', life: 3000 });
   }finally{
     loading.value = false
   }

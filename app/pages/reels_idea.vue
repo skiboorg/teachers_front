@@ -6,8 +6,12 @@
       <div v-for="idea in ideas" :key="idea.id" class=" p-4 rounded-lg shadow" :class="idea.is_approved ? 'bg-green-100' : 'bg-white'">
 
         <div class="flex flex-col items-start justify-between h-full">
-          <div class="">
-            <h3 class="font-bold">{{ idea.reels_number }} — {{ idea.title }}</h3>
+          <div class="w-full">
+            <div class="flex justify-between w-full">
+              <p>№ {{ idea.reels_number }}</p>
+              <p v-if="idea.author" class="bg-gray-500 text-white px-2 py-1 rounded-md text-xs">Добавил {{ idea.author }}</p>
+            </div>
+            <h3 class="font-bold"> {{ idea.title }}</h3>
             <p class="text-gray-600 ">{{ new Date(idea.created_at).toLocaleString() }}</p>
             <p class="text-gray-600 mt-2">{{ idea.plot_description }}</p>
 

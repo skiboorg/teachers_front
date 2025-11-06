@@ -3,4 +3,5 @@
 
 <template>
   <slot/>
+  <Toast position="bottom-right"/>
 </template>

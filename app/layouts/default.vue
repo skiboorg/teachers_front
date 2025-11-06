@@ -4,4 +4,5 @@
 <template>
   <BlockHeader/>
   <slot/>
+  <Toast position="bottom-right"/>
 </template>

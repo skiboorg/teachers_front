@@ -1,5 +1,5 @@
 //init app
-
+import ToastService from 'primevue/toastservice';
 export default defineNuxtPlugin({
   name: 'init-app',
   dependsOn: ['fetch'],

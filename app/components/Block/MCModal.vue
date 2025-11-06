@@ -19,7 +19,7 @@
           <Textarea v-model="form.admin_comment" placeholder="Комментарий администратора"/>
 
         </div>
-        <InputText v-model="form.mk_number" placeholder="Номер МК" required/>
+        <InputText v-model="form.mk_number" placeholder="Номер МК" />
         <InputText v-model="form.title" placeholder="Название" required/>
 
         <Editor ref="editor" class="mb-4"  v-model="form.description" @load="idea?.id ? editorLoad : null" editorStyle="height: 320px"/>

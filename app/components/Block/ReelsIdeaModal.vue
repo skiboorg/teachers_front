@@ -9,9 +9,9 @@
   >
     <form @submit.prevent="save">
       <div class="flex flex-col items-start justify-start gap-2 w-full">
-      <InputText fluid v-model="form.reels_number" placeholder="Номер Reels" required/>
+      <InputText fluid v-model="form.reels_number" placeholder="Номер Reels" />
       <InputText fluid v-model="form.title" placeholder="Название" required/>
-      <Textarea fluid v-model="form.plot_description" placeholder="Описание сюжета" required/>
+      <Textarea fluid v-model="form.plot_description" placeholder="Описание сюжета" />
 
       <div class="mt-2 w-full">
         <p class="font-semibold">Примеры:</p>
