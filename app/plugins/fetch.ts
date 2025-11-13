@@ -21,10 +21,11 @@ export default defineNuxtPlugin({
       },
       async onResponseError({ response }) {
 
-        // if(response.status == 401){
-        //   nuxtApp.runWithContext(() => navigateTo('/'));
-        //   // mb with real page reload
-        // }
+        if(response.status == 401){
+          const auth_token = useCookie('auth_token')
+          auth_token.value = null
+          navigateTo('/login');
+        }
       }
     });
 
