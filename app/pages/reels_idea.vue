@@ -1,7 +1,13 @@
 <template>
   <div class="p-4">
-    <Button label="Добавить идею" @click="openModal(null)" class="mb-4"/>
-
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold">Идеи reels</h1>
+      <Button label="Добавить идею" icon="pi pi-plus" @click="openModal(null)" />
+    </div>
+    <div class="flex flex-wrap gap-2 mb-4">
+      <Button :outlined = 'selected_tag !== ""' @click="selected_tag=''" label="Все"/>
+      <Button :outlined = 'selected_tag !== tag.id' @click="selected_tag=tag.id" v-for="tag in tags" :label="tag.name"/>
+    </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
       <div v-for="idea in ideas" :key="idea.id" class=" p-4 rounded-lg shadow" :class="idea.is_approved ? 'bg-green-100' : 'bg-white'">
 
@@ -57,10 +63,16 @@
 const {user} = useAuthStore()
 const modalOpen = ref(false)
 const selectedIdea = ref<any>(null)
+const selected_tag = ref('')
 
 const {$api} = useNuxtApp()
-const {data:ideas, refresh} = await useAsyncData(()=> $api.data.getReels())
+const {data:ideas, refresh} = await useAsyncData(()=> $api.data.getReels(selected_tag.value))
+const {data:tags} = await useAsyncData(()=> $api.data.r_tags())
 
+watch(selected_tag, async () => {
+  console.log(selected_tag.value)
+  await refresh()
+})
 
 function openModal(idea: any = null) {
   selectedIdea.value = idea

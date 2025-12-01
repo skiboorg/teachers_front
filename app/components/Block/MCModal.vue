@@ -21,7 +21,7 @@
         </div>
         <InputText v-model="form.mk_number" placeholder="Номер МК" />
         <InputText v-model="form.title" placeholder="Название" required/>
-
+        <MultiSelect fluid v-model="form.tags" :options="tags" option-value="id" option-label="name"  placeholder="Теги"/>
         <Editor ref="editor" class="mb-4"  v-model="form.description" @load="idea?.id ? editorLoad : null" editorStyle="height: 320px"/>
 
 
@@ -95,7 +95,7 @@ const {user} = useAuthStore()
 const {$api} = useNuxtApp()
 const props = defineProps<{ idea?: any, modelValue: boolean }>()
 const emit = defineEmits(['update:modelValue', 'saved', 'close'])
-
+const {data:tags} = await useAsyncData(()=> $api.data.mk_tags())
 const visible = ref(props.modelValue)
 watch(() => props.modelValue, val => visible.value = val)
 watch(visible, val => emit('update:modelValue', val))
@@ -107,6 +107,7 @@ const form = reactive({
   description: '',
   is_approved: false,
   admin_comment: '',
+  tags:[],
   materials: [] as Array<any>,
   example_links: [] as Array<any>,
   files: [] as Array<any>,
@@ -122,6 +123,7 @@ watch(() => props.idea, (idea) => {
     form.description = idea.description
     form.is_approved = idea.is_approved
     form.admin_comment = idea.admin_comment
+    form.tags = idea.tags.map(tag => tag.id)
     form.materials = idea.materials?.map(m => ({...m})) || []
     form.example_links = idea.example_links?.map(l => ({...l})) || []
     form.files = idea.files?.map(f => ({...f, file:null})) || []
@@ -137,6 +139,7 @@ watch(() => props.idea, (idea) => {
     form.example_links = []
     form.files = []
     form.dates = []
+    form.tags = []
     coverPreview.value = null
   }
 }, { immediate: true })

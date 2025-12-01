@@ -40,6 +40,14 @@ export function createBlankRepository(appFetch: typeof $fetch){
             const response =  await appFetch('/api/data/teachers')
             return response
         },
+        async r_tags(){
+            const response =  await appFetch('/api/idea/r_tags')
+            return response
+        },
+        async mk_tags(){
+            const response =  await appFetch('/api/idea/mk_tags')
+            return response
+        },
         async notes(){
             const response =  await appFetch('/api/data/note/')
             return response
@@ -171,8 +179,8 @@ export function createBlankRepository(appFetch: typeof $fetch){
         async deleteTask(id: number) {
             return await appFetch(`/api/idea/tasks/${id}/`, { method: 'DELETE' })
         },
-        async getReels() {
-            return await appFetch('/api/idea/reels-ideas/')
+        async getReels(tag_id='') {
+            return await appFetch(`/api/idea/reels-ideas/?tag_id=${tag_id}`)
         },
         async createReels(data: any) {
             const formData = new FormData()
@@ -182,6 +190,7 @@ export function createBlankRepository(appFetch: typeof $fetch){
             formData.append('is_approved', data.is_approved ? 'true' : 'false')
             formData.append('admin_comment', data.admin_comment || '')
             formData.append('example_links', JSON.stringify(data.example_links || []))
+            formData.append('tags', JSON.stringify(data.tags || []))
 
             return await appFetch('/api/idea/reels-ideas/', { method: 'POST', body: formData })
         },
@@ -194,6 +203,7 @@ export function createBlankRepository(appFetch: typeof $fetch){
             formData.append('is_approved', data.is_approved ? 'true' : 'false')
             formData.append('admin_comment', data.admin_comment || '')
             formData.append('example_links', JSON.stringify(data.example_links || []))
+            formData.append('tags', JSON.stringify(data.tags || []))
 
             return await appFetch(`/api/idea/reels-ideas/${id}/`, { method: 'PUT', body: formData })
         },
@@ -203,8 +213,8 @@ export function createBlankRepository(appFetch: typeof $fetch){
         },
 
 
-        async getMasterclasses() {
-            return await appFetch('/api/idea/masterclass-ideas/')
+        async getMasterclasses(tag_id='') {
+            return await appFetch(`/api/idea/masterclass-ideas/?tag_id=${tag_id}`)
         },
 
         async createMC(data: any) {
@@ -214,6 +224,7 @@ export function createBlankRepository(appFetch: typeof $fetch){
             formData.append('description', data.description)
             formData.append('is_approved', data.is_approved ? 'true' : 'false')
             formData.append('admin_comment', data.admin_comment || '')
+            formData.append('tags', JSON.stringify(data.tags || []))
             if (data.cover) formData.append('cover', data.cover)
 
             formData.append('materials', JSON.stringify(data.materials || []))
@@ -237,6 +248,7 @@ export function createBlankRepository(appFetch: typeof $fetch){
             formData.append('description', data.description)
             formData.append('is_approved', data.is_approved ? 'true' : 'false')
             formData.append('admin_comment', data.admin_comment || '')
+            formData.append('tags', JSON.stringify(data.tags || []))
             if (data.cover instanceof File) formData.append('cover', data.cover)
 
             formData.append('materials', JSON.stringify(data.materials || []))

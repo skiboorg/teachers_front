@@ -4,7 +4,10 @@
       <h1 class="text-2xl font-bold">Идеи Мастер-классов</h1>
       <Button label="Новая идея" icon="pi pi-plus" @click="openModal()"/>
     </div>
-
+    <div class="flex flex-wrap gap-2 mb-4">
+      <Button :outlined = 'selected_tag !== ""' @click="selected_tag=''" label="Все"/>
+      <Button :outlined = 'selected_tag !== tag.id' @click="selected_tag=tag.id" v-for="tag in tags" :label="tag.name"/>
+    </div>
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
       <div v-for="idea in ideas" :key="idea.id" class="flex flex-col gap-2 p-4 rounded-lg shadow" :class="idea.is_approved ? 'bg-green-100' : 'bg-white'">
 
@@ -79,8 +82,10 @@ const modalVisible = ref(false)
 const selectedIdea = ref<any>(null)
 const {user} = useAuthStore()
 const {$api} = useNuxtApp()
-const {data:ideas, refresh} = await useAsyncData(()=> $api.data.getMasterclasses())
+const selected_tag = ref('')
+const {data:ideas, refresh} = await useAsyncData(()=> $api.data.getMasterclasses(selected_tag.value))
 
+const {data:tags} = await useAsyncData(()=> $api.data.mk_tags())
 function openModal(idea?: any) {
   selectedIdea.value = idea ? { ...idea } : null
   modalVisible.value = true
@@ -94,4 +99,8 @@ async function deleteIdea(id: number) {
   await $api.data.deleteMC(id)
   await refresh()
 }
+watch(selected_tag, async () => {
+  console.log(selected_tag.value)
+  await refresh()
+})
 </script>

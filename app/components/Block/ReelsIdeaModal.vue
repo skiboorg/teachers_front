@@ -7,11 +7,13 @@
       @update:visible="onVisibleChange"
       class="w-full max-w-4xl"
   >
+
     <form @submit.prevent="save">
       <div class="flex flex-col items-start justify-start gap-2 w-full">
       <InputText fluid v-model="form.reels_number" placeholder="Номер Reels" />
       <InputText fluid v-model="form.title" placeholder="Название" required/>
       <Textarea fluid v-model="form.plot_description" placeholder="Описание сюжета" />
+        <MultiSelect fluid v-model="form.tags" :options="tags" option-value="id" option-label="name"  placeholder="Теги"/>
 
       <div class="mt-2 w-full">
         <p class="font-semibold">Примеры:</p>
@@ -59,11 +61,13 @@ const props = defineProps<{ idea?: any,modelValue: boolean }>()
 const {$api} = useNuxtApp()
 const emit = defineEmits(['update:modelValue', 'close', 'saved'])
 const visible = ref(props.modelValue)
+const {data:tags} = await useAsyncData(()=> $api.data.r_tags())
 watch(() => props.modelValue, val => (visible.value = val))
 watch(visible, val => emit('update:modelValue', val))
 const form = reactive({
   reels_number: '',
   title: '',
+  tags:[],
   plot_description: '',
   is_approved: false,
   admin_comment: '',
@@ -81,6 +85,7 @@ watch(() => props.idea, (idea) => {
     form.plot_description = idea.plot_description
     form.is_approved = idea.is_approved
     form.admin_comment = idea.admin_comment
+    form.tags = idea.tags.map(tag => tag.id)
     form.example_links = (idea.example_links ?? []).map(l => ({ ...l }))
   } else {
     form.reels_number = ''
@@ -116,5 +121,6 @@ function resetForm() {
   form.is_approved = false
   form.admin_comment = ''
   form.example_links = []
+  form.tags = []
 }
 </script>
