@@ -157,7 +157,7 @@ const handleUpdate = async () => {
           </div>
           <div class="">
             <p>Ученики:</p>
-            <p class="text-gray-600 text-sm">{{ lesson.pupils_text }}</p>
+            <p class="text-gray-600 text-sm" v-for="item in  lesson.pupils">{{ item.full_name }}</p>
           </div>
         </div>
       </div>

@@ -11,7 +11,7 @@ const lesson_data = ref({
   comment:null,
   comment_hidden:null,
   pupils_text:null,
-  pupils:null,
+  pupil_ids:null,
   teacher_id:null,
   lesson_type_id:null,
   status_id:null,
@@ -47,7 +47,7 @@ watch(() => props.lesson, (newData) => {
     comment:newData.comment,
     comment_hidden:newData.comment_hidden,
     pupils_text:newData.pupils_text,
-    pupils:newData.pupils,
+    pupil_ids:newData.pupils.map(pupil => pupil.id),
     lesson_type_id:newData.lesson_type.id,
     status_id:newData.status.id,
     payment_status_id:newData.payment_status?.id || null,
@@ -98,8 +98,8 @@ const handleClick = async (action) => {
     </Select>
 
     <p class="mb-1">Ученики</p>
-<!--    <MultiSelect fluid v-model="lesson_data.pupils" class="mb-3" :options="pupils" optionLabel="full_name" option-value="id" filter placeholder="Выберите"/>-->
-    <InputText  class="mb-3" fluid v-model="lesson_data.pupils_text"/>
+    <MultiSelect fluid v-model="lesson_data.pupil_ids" class="mb-3" :options="pupils" optionLabel="full_name" option-value="id" filter placeholder="Выберите"/>
+<!--    <InputText  class="mb-3" fluid v-model="lesson_data.pupils_text"/>-->
     <p  class="mb-1">Коментарий</p>
     <InputText  class="mb-3" fluid v-model="lesson_data.comment"/>
     <p v-if="user.is_staff" class="mb-1">Коментарий админа</p>

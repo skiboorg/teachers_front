@@ -6,6 +6,8 @@ const links = [
   {name: 'Задачи', to: '/task', is_admin: true, is_support:false},
   {name: 'Идеи для reels', to: '/reels_idea', is_admin: true, is_support:true},
   {name: 'Идеи для МК', to: '/mk_idea', is_admin: true, is_support:true},
+  {name: 'Ученики', to: '/pupils', is_admin: true, is_support:false},
+  {name: 'Платежи', to: '/payments', is_admin: true, is_support:false},
 ]
 
 const visibleLinks = computed(() => {

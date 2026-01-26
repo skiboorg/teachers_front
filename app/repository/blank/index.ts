@@ -268,6 +268,9 @@ export function createBlankRepository(appFetch: typeof $fetch){
         async deleteMC(id: number) {
             return await appFetch(`/api/idea/masterclass-ideas/${id}/`, { method: 'DELETE' })
         },
+        async all_pupils() {
+            return await appFetch(`/api/user/all_pupils`)
+        },
 
 
 
