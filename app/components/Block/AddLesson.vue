@@ -11,7 +11,7 @@ const lesson_data = ref({
   comment:null,
   comment_hidden:null,
   pupils_text:null,
-  pupil_ids:null,
+  pupil_ids:[],
   teacher_id:null,
   lesson_type_id:null,
   status_id:null,
@@ -99,7 +99,7 @@ const handleClick = async (action) => {
 
     <p class="mb-1">Ученики</p>
     <MultiSelect fluid v-model="lesson_data.pupil_ids" class="mb-3" :options="pupils" optionLabel="full_name" option-value="id" filter placeholder="Выберите"/>
-<!--    <InputText  class="mb-3" fluid v-model="lesson_data.pupils_text"/>-->
+    <InputText  class="mb-3" fluid v-model="lesson_data.pupils_text"/>
     <p  class="mb-1">Коментарий</p>
     <InputText  class="mb-3" fluid v-model="lesson_data.comment"/>
     <p v-if="user.is_staff" class="mb-1">Коментарий админа</p>
