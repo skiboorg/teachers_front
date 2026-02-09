@@ -44,6 +44,10 @@ export function createBlankRepository(appFetch: typeof $fetch){
             const response =  await appFetch('/api/idea/r_tags')
             return response
         },
+        async r_filters(){
+            const response =  await appFetch('/api/idea/r_filters')
+            return response
+        },
         async mk_tags(){
             const response =  await appFetch('/api/idea/mk_tags')
             return response
@@ -179,8 +183,8 @@ export function createBlankRepository(appFetch: typeof $fetch){
         async deleteTask(id: number) {
             return await appFetch(`/api/idea/tasks/${id}/`, { method: 'DELETE' })
         },
-        async getReels(tag_id='') {
-            return await appFetch(`/api/idea/reels-ideas/?tag_id=${tag_id}`)
+        async getReels(tag_id='',filter_id='') {
+            return await appFetch(`/api/idea/reels-ideas/?tag_id=${tag_id}&filter_id=${filter_id}`)
         },
         async createReels(data: any) {
             const formData = new FormData()
@@ -188,10 +192,12 @@ export function createBlankRepository(appFetch: typeof $fetch){
             formData.append('title', data.title)
             formData.append('plot_description', data.plot_description)
             formData.append('is_approved', data.is_approved ? 'true' : 'false')
+            formData.append('is_done', data.is_done ? 'true' : 'false')
+            formData.append('is_bad', data.is_bad ? 'true' : 'false')
             formData.append('admin_comment', data.admin_comment || '')
             formData.append('example_links', JSON.stringify(data.example_links || []))
             formData.append('tags', JSON.stringify(data.tags || []))
-
+            formData.append('filters', JSON.stringify(data.filters || []))
             return await appFetch('/api/idea/reels-ideas/', { method: 'POST', body: formData })
         },
 
@@ -201,9 +207,12 @@ export function createBlankRepository(appFetch: typeof $fetch){
             formData.append('title', data.title)
             formData.append('plot_description', data.plot_description)
             formData.append('is_approved', data.is_approved ? 'true' : 'false')
+            formData.append('is_done', data.is_done ? 'true' : 'false')
+            formData.append('is_bad', data.is_bad ? 'true' : 'false')
             formData.append('admin_comment', data.admin_comment || '')
             formData.append('example_links', JSON.stringify(data.example_links || []))
             formData.append('tags', JSON.stringify(data.tags || []))
+            formData.append('filters', JSON.stringify(data.filters || []))
 
             return await appFetch(`/api/idea/reels-ideas/${id}/`, { method: 'PUT', body: formData })
         },

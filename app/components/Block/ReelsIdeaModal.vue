@@ -14,6 +14,7 @@
       <InputText fluid v-model="form.title" placeholder="Название" required/>
       <Textarea fluid v-model="form.plot_description" placeholder="Описание сюжета" />
         <MultiSelect fluid v-model="form.tags" :options="tags" option-value="id" option-label="name"  placeholder="Теги"/>
+        <MultiSelect fluid v-model="form.filters" :options="filters" option-value="id" option-label="name"  placeholder="Фильтры"/>
 
       <div class="mt-2 w-full">
         <p class="font-semibold">Примеры:</p>
@@ -31,6 +32,14 @@
             <div class="flex items-center gap-2">
               <Checkbox v-model="form.is_approved" :binary="true" inputId="is_approved"/>
               <label for="is_approved" class="font-medium">Одобрено</label>
+            </div>
+            <div class="flex items-center gap-2">
+              <Checkbox v-model="form.is_done" :binary="true" inputId="is_approved"/>
+              <label for="is_done" class="font-medium">Отснято</label>
+            </div>
+            <div class="flex items-center gap-2">
+              <Checkbox v-model="form.is_bad" :binary="true" inputId="is_approved"/>
+              <label for="is_bad" class="font-medium">Забраковано</label>
             </div>
             <div class="flex flex-col gap-1">
               <label for="admin_comment" class="font-medium">Комментарий администратора</label>
@@ -62,14 +71,18 @@ const {$api} = useNuxtApp()
 const emit = defineEmits(['update:modelValue', 'close', 'saved'])
 const visible = ref(props.modelValue)
 const {data:tags} = await useAsyncData(()=> $api.data.r_tags())
+const {data:filters} = await useAsyncData(()=> $api.data.r_filters())
 watch(() => props.modelValue, val => (visible.value = val))
 watch(visible, val => emit('update:modelValue', val))
 const form = reactive({
   reels_number: '',
   title: '',
   tags:[],
+  filters:[],
   plot_description: '',
   is_approved: false,
+  is_done: false,
+  is_bad: false,
   admin_comment: '',
   example_links: [] as Array<{name:string, link:string}>
 })
@@ -84,13 +97,19 @@ watch(() => props.idea, (idea) => {
     form.title = idea.title
     form.plot_description = idea.plot_description
     form.is_approved = idea.is_approved
+    form.is_done = idea.is_done
+    form.is_bad = idea.is_bad
     form.admin_comment = idea.admin_comment
     form.tags = idea.tags.map(tag => tag.id)
+    form.filters = idea.filters.map(filter => filter.id)
     form.example_links = (idea.example_links ?? []).map(l => ({ ...l }))
   } else {
     form.reels_number = ''
     form.title = ''
     form.plot_description = ''
+    form.is_approved = false
+    form.is_done = false
+    form.is_bad = false
     form.is_approved = false
     form.admin_comment = ''
     form.example_links = []
@@ -122,5 +141,6 @@ function resetForm() {
   form.admin_comment = ''
   form.example_links = []
   form.tags = []
+  form.filters = []
 }
 </script>
